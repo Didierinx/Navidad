@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Navidad Especial 2025 🌸</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --pink-main: #f7a8c4;
+            --pink-light: #ffdeeb;
+            --pink-dark: #d16e8d;
+            --ribbon: #ffffff;
+        }
+
+        body {
+            background: linear-gradient(180deg, #e0f7fa 0%, #ffdeeb 100%);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden;
+            perspective: 1200px;
+        }
+
+        .title {
+            position: absolute;
+            top: 40px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            color: var(--pink-dark);
+            z-index: 10;
+            text-shadow: 2px 2px 4px white;
+            transition: opacity 0.5s;
+        }
+
+        /* --- CAJA DE REGALO 3D --- */
+        #gift-scene {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            transform-style: preserve-3d;
+            transition: all 0.8s ease;
+            cursor: pointer;
+            z-index: 50;
+        }
+
+        .box-face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: var(--pink-main);
+            border: 2px solid rgba(255,255,255,0.4);
+        }
+
+        .box-face::after {
+            content: '';
+            position: absolute;
+            left: 50%; transform: translateX(-50%);
+            width: 40px; height: 100%;
+            background: var(--ribbon);
+        }
+
+        .front  { transform: translateZ(100px); }
+        .back   { transform: rotateY(180deg) translateZ(100px); }
+        .right  { transform: rotateY(90deg) translateZ(100px); }
+        .left   { transform: rotateY(-90deg) translateZ(100px); }
+        .bottom { transform: rotateX(-90deg) translateZ(100px); background: var(--pink-dark); }
+        .top    { transform: rotateX(90deg) translateZ(100px); z-index: 10; }
+
+        /* --- CARTA CORREGIDA --- */
+        #main-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 380px; /* Un poco más ancha */
+            height: 550px; /* Un poco más alta */
+            background: #fff9e6;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            z-index: 100;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 30px;
+            box-sizing: border-box; /* IMPORTANTE: incluye el padding en el tamaño */
+            overflow-y: auto; /* Permite scroll si el texto es muy largo */
+            border: 10px double var(--pink-light);
+            display: block; /* Para que el scroll funcione correctamente */
+        }
+
+        .card-content {
+            font-family: 'Dancing Script', cursive;
+            color: var(--pink-dark);
+            font-size: 1.25rem;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        /* --- PERSONAJES --- */
+        .character {
+            position: absolute;
+            bottom: -400px; 
+            width: 280px; /* Tamaño grande solicitado */
+            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.6s;
+            z-index: 110;
+        }
+
+        #kuromi-img { right: 3%; }
+        #foca-img { left: 3%; }
+
+        /* --- LLUVIA DE CORAZONES --- */
+        .heart {
+            position: fixed;
+            top: -10%;
+            color: #ffb7d5;
+            font-size: 24px;
+            user-select: none;
+            z-index: 5;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+
+        /* --- ESTADOS OPEN --- */
+        .is-open #gift-scene {
+            transform: scale(0);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .is-open #main-card {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .is-open #kuromi-img, .is-open #foca-img { bottom: 40px; }
+        .is-open .title { opacity: 0; }
+
+        /* --- PIE DE ÁRBOLES --- */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            z-index: 1;
+        }
+
+        .footer img {
+            width: 130px;
+            height: auto;
+            opacity: 0.8;
+        }
+
+        .instruction {
+            margin-top: 40px;
+            color: var(--pink-dark);
+            font-weight: bold;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+        /* Personalización del scroll de la carta */
+        #main-card::-webkit-scrollbar { width: 8px; }
+        #main-card::-webkit-scrollbar-thumb { background: var(--pink-light); border-radius: 10px; }
+    </style>
+</head>
+<body id="main-body">
+
+    <h1 class="title">Sorpresitaaaa</h1>
+
+    <div id="gift-scene" onclick="abrirTodo()">
+        <div class="box-face top"></div>
+        <div class="box-face front"></div>
+        <div class="box-face back"></div>
+        <div class="box-face left"></div>
+        <div class="box-face right"></div>
+        <div class="box-face bottom"></div>
+    </div>
+
+    <div id="main-card">
+        <div class="card-content">
+            <h2 style="font-size: 1.8rem;">Para la niña más especial que conocí este 2025...</h2>
+            <p>Melanie, Mel, Meli, Mochi, Mochisita, Melaniesita, tantas maneras de llamarte pero siempre será la misma persona especial a la cual voy a recurrir cuando algo en mi vida esté bien o mal, esa persona por la cual sería capaz de cometer mil locuras y no pensaría dos veces en hacer algo cuando se trata de tí. De verdad pensar que hace un año estabamos pasando una Navidad juntos y se me hizo tan bonito ese día y te agradezco por eso y por todo el tiempo hasta ahora contigo, ese día imaginate quería regalarte el Silent Hill según yo SKJDASKJ y por unas fallas técnicas terminaste con un juego de ritmo, no fue la gran cosa pero esperaba que te haga mucha ilusión. De verdad no tengo palabras para agradecerte por estar en mi vida, te convertiste en un pilar de mi vida literalmente llegando al punto de estar pensando a cada rato en como estás, que estás haciendo, si estás bien, si has comido, si estas mal, en qué puedo hacer para sacarte una sonrisa, llegaste y le dijiste a mi cerebro y a mi corazón apartense que de aquí no me voy y efectivamente sigue ocupando una gran parte de él.</p>
+            <p>Espero que hoy pases un bonito día junto a tu familia, va ser tu primera navidad en una nueva casa, en un ambiente cómodo donde tanto querías estar con tu mamá, abuela, hermano y José. Te mereces todo lo bonito de este mundo, aunque bueno creo que lo más bonito de este mundo ya lo tienes en esos dos ojazos que te cargas. Sé que en el transcurso de este año te he bombardeado de regalos, créeme me he esforzado en cada uno de ellos ya sean sorpresa o cosas que me has pedido, aunque me han matado trabajando pero lo hago con muchísimo gusto porque se eso te hará feliz, espero te hayan gustado cada uno de ellos, siempre estoy pensando algo nuevo para tí, ni yo sabía que era tan detallista pero es que no puelo parar contigo aiuda, cada reacción tuya para mí es inexplicable y bonita, estoy 100% seguro que te ves preciosaa muy feliz. El regalo de esta navidad, no te lo podré dar hoy y te pido perdón por eso pero ya llegará pronto si todo sale bien y esperemos que sirva mucho.</p>
+            <p>Te pido perdón si he hecho algo que no te agrado o actuado de manera idiota, pero hay veces que llego a un límite y no se que hacer la verdad pero siempre querré lo mejor para tí, espero te traigan muchos regalitos Santa Claus y Oculus y Pc y FullBody y todo, ten una linda noche Meli Te quiero muchísimo.</p>
+            <p style="font-size: 1.8rem; margin-top: 20px;">¡Feliz Navidad! ♡</p>
+        </div>
+    </div>
+
+    <img src="kuromi.png" id="kuromi-img" class="character" alt="Kuromi">
+    <img src="foca.png" id="foca-img" class="character" alt="Foca Navideña">
+
+    <p class="instruction" id="hint">Haz click en el regalo</p>
+
+    <div class="footer">
+        <img src="arbol.jpg" alt="arbol">
+        <img src="arbol.jpg" alt="arbol">
+        <img src="arbol.jpg" alt="arbol">
+        <img src="arbol.jpg" alt="arbol">
+    </div>
+
+    <script>
+        function crearCorazon() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '🌸'; 
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            heart.style.opacity = Math.random();
+            document.body.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 6000);
+        }
+
+        function abrirTodo() {
+            document.getElementById('main-body').classList.add('is-open');
+            document.getElementById('hint').style.display = 'none';
+
+            confetti({
+                particleCount: 200,
+                spread: 90,
+                origin: { y: 0.6 },
+                colors: ['#ffdeeb', '#f7a8c4', '#ffffff']
+            });
+
+            setInterval(crearCorazon, 400);
+        }
+    </script>
+</body>
+</html>
