@@ -71,13 +71,13 @@
         .bottom { transform: rotateX(-90deg) translateZ(100px); background: var(--pink-dark); }
         .top    { transform: rotateX(90deg) translateZ(100px); z-index: 10; }
 
-        /* --- CARTA CORREGIDA --- */
+        /* --- CARTA --- */
         #main-card {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 380px; /* Un poco más ancha */
-            height: 550px; /* Un poco más alta */
+            width: 380px; 
+            height: 550px; 
             background: #fff9e6;
             border-radius: 15px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.2);
@@ -86,10 +86,10 @@
             z-index: 100;
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             padding: 30px;
-            box-sizing: border-box; /* IMPORTANTE: incluye el padding en el tamaño */
-            overflow-y: auto; /* Permite scroll si el texto es muy largo */
+            box-sizing: border-box;
+            overflow-y: auto;
             border: 10px double var(--pink-light);
-            display: block; /* Para que el scroll funcione correctamente */
+            display: block;
         }
 
         .card-content {
@@ -104,7 +104,7 @@
         .character {
             position: absolute;
             bottom: -400px; 
-            width: 280px; /* Tamaño grande solicitado */
+            width: 280px; 
             transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.6s;
             z-index: 110;
         }
@@ -166,12 +166,16 @@
         }
         @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
 
-        /* Personalización del scroll de la carta */
         #main-card::-webkit-scrollbar { width: 8px; }
         #main-card::-webkit-scrollbar-thumb { background: var(--pink-light); border-radius: 10px; }
     </style>
 </head>
 <body id="main-body">
+
+    <audio id="bg-music" loop>
+        <source src="dime.mp3" type="audio/mpeg">
+        Tu navegador no soporta el audio.
+    </audio>
 
     <h1 class="title">Sorpresitaaaa</h1>
 
@@ -186,7 +190,7 @@
 
     <div id="main-card">
         <div class="card-content">
-            <h2 style="font-size: 1.8rem;">Para la niña más especial que conocí este 2025...</h2>
+            <h2 style="font-size: 1.8rem;">Para la niña más especial....</h2>
             <p>Melanie, Mel, Meli, Mochi, Mochisita, Melaniesita, tantas maneras de llamarte pero siempre será la misma persona especial a la cual voy a recurrir cuando algo en mi vida esté bien o mal, esa persona por la cual sería capaz de cometer mil locuras y no pensaría dos veces en hacer algo cuando se trata de tí. De verdad pensar que hace un año estabamos pasando una Navidad juntos y se me hizo tan bonito ese día y te agradezco por eso y por todo el tiempo hasta ahora contigo, ese día imaginate quería regalarte el Silent Hill según yo SKJDASKJ y por unas fallas técnicas terminaste con un juego de ritmo, no fue la gran cosa pero esperaba que te haga mucha ilusión. De verdad no tengo palabras para agradecerte por estar en mi vida, te convertiste en un pilar de mi vida literalmente llegando al punto de estar pensando a cada rato en como estás, que estás haciendo, si estás bien, si has comido, si estas mal, en qué puedo hacer para sacarte una sonrisa, llegaste y le dijiste a mi cerebro y a mi corazón apartense que de aquí no me voy y efectivamente sigue ocupando una gran parte de él.</p>
             <p>Espero que hoy pases un bonito día junto a tu familia, va ser tu primera navidad en una nueva casa, en un ambiente cómodo donde tanto querías estar con tu mamá, abuela, hermano y José. Te mereces todo lo bonito de este mundo, aunque bueno creo que lo más bonito de este mundo ya lo tienes en esos dos ojazos que te cargas. Sé que en el transcurso de este año te he bombardeado de regalos, créeme me he esforzado en cada uno de ellos ya sean sorpresa o cosas que me has pedido, aunque me han matado trabajando pero lo hago con muchísimo gusto porque se eso te hará feliz, espero te hayan gustado cada uno de ellos, siempre estoy pensando algo nuevo para tí, ni yo sabía que era tan detallista pero es que no puelo parar contigo aiuda, cada reacción tuya para mí es inexplicable y bonita, estoy 100% seguro que te ves preciosaa muy feliz. El regalo de esta navidad, no te lo podré dar hoy y te pido perdón por eso pero ya llegará pronto si todo sale bien y esperemos que sirva mucho.</p>
             <p>Te pido perdón si he hecho algo que no te agrado o actuado de manera idiota, pero hay veces que llego a un límite y no se que hacer la verdad pero siempre querré lo mejor para tí, espero te traigan muchos regalitos Santa Claus y Oculus y Pc y FullBody y todo, ten una linda noche Meli Te quiero muchísimo.</p>
@@ -219,9 +223,14 @@
         }
 
         function abrirTodo() {
+            // Iniciar música
+            const music = document.getElementById('bg-music');
+            music.play().catch(e => console.log("Audio play failed:", e));
+
             document.getElementById('main-body').classList.add('is-open');
             document.getElementById('hint').style.display = 'none';
 
+            // Confetti
             confetti({
                 particleCount: 200,
                 spread: 90,
@@ -229,6 +238,7 @@
                 colors: ['#ffdeeb', '#f7a8c4', '#ffffff']
             });
 
+            // Lluvia de flores/corazones
             setInterval(crearCorazon, 400);
         }
     </script>
